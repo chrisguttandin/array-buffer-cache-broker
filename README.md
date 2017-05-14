@@ -1,7 +1,5 @@
 # array-buffer-cache-broker
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/chrisguttandin/array-buffer-cache-broker.svg)](https://greenkeeper.io/)
-
 **The broker which is used by the array-buffer-cache package.**
 
 [![tests](https://img.shields.io/travis/chrisguttandin/array-buffer-cache-broker/master.svg?style=flat-square)](https://travis-ci.org/chrisguttandin/array-buffer-cache-broker)
