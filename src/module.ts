@@ -25,17 +25,17 @@ export const load = (url: string) => {
 
     const arrayBufferIds: Set<number> = new Set();
 
-    const ongoingRecordingRequests: Set<number> = new Set();
+    const ongoingRequests: Set<number> = new Set();
 
     const clone = (arrayBufferId: number): Promise<ArrayBuffer> => {
         return new Promise((resolve, reject) => {
-            const id = generateUniqueId(ongoingRecordingRequests);
+            const id = generateUniqueId(ongoingRequests);
 
-            ongoingRecordingRequests.add(id);
+            ongoingRequests.add(id);
 
             const onMessage = ({ data }: IWorkerEvent) => {
                 if (data.id === id) {
-                    ongoingRecordingRequests.delete(id);
+                    ongoingRequests.delete(id);
 
                     worker.removeEventListener('message', onMessage);
 
@@ -55,17 +55,17 @@ export const load = (url: string) => {
 
     const purge = (arrayBufferId: number): Promise<void> => {
         return new Promise<void>((resolve, reject) => {
-            const id = generateUniqueId(ongoingRecordingRequests);
+            const id = generateUniqueId(ongoingRequests);
 
-            ongoingRecordingRequests.add(id);
+            ongoingRequests.add(id);
 
             const onMessage = ({ data }: IWorkerEvent) => {
                 if (data.id === id) {
-                    ongoingRecordingRequests.delete(id);
+                    ongoingRequests.delete(id);
 
                     worker.removeEventListener('message', onMessage);
 
-                    ongoingRecordingRequests.delete(arrayBufferId);
+                    ongoingRequests.delete(arrayBufferId);
 
                     if (data.error === null) {
                         resolve();
@@ -83,13 +83,13 @@ export const load = (url: string) => {
 
     const slice = (arrayBufferId: number, begin: number, end: null | number = null): Promise<ArrayBuffer> => {
         return new Promise((resolve, reject) => {
-            const id = generateUniqueId(ongoingRecordingRequests);
+            const id = generateUniqueId(ongoingRequests);
 
-            ongoingRecordingRequests.add(id);
+            ongoingRequests.add(id);
 
             const onMessage = ({ data }: IWorkerEvent) => {
                 if (data.id === id) {
-                    ongoingRecordingRequests.delete(id);
+                    ongoingRequests.delete(id);
 
                     worker.removeEventListener('message', onMessage);
 
@@ -109,9 +109,9 @@ export const load = (url: string) => {
 
     const store = (arrayBuffer: ArrayBuffer): Promise<number> => {
         return new Promise((resolve, reject) => {
-            const id = generateUniqueId(ongoingRecordingRequests);
+            const id = generateUniqueId(ongoingRequests);
 
-            ongoingRecordingRequests.add(id);
+            ongoingRequests.add(id);
 
             const arrayBufferId = generateUniqueId(arrayBufferIds);
 
@@ -119,7 +119,7 @@ export const load = (url: string) => {
 
             const onMessage = ({ data }: IWorkerEvent) => {
                 if (data.id === id) {
-                    ongoingRecordingRequests.delete(id);
+                    ongoingRequests.delete(id);
 
                     worker.removeEventListener('message', onMessage);
 
