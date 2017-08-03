@@ -1,6 +1,8 @@
 import {
     ICloneRequest,
     ICloneResponse,
+    IConnectRequest,
+    IDisconnectRequest,
     IPurgeRequest,
     ISliceRequest,
     ISliceResponse,
@@ -20,9 +22,7 @@ const generateUniqueId = (set: Set<number>) => {
     return id;
 };
 
-export const load = (url: string) => {
-    const worker = new Worker(url);
-
+export const wrap = (worker: MessagePort | Worker) => {
     const arrayBufferIds: Set<number> = new Set();
 
     const ongoingRequests: Set<number> = new Set();
@@ -50,6 +50,58 @@ export const load = (url: string) => {
             worker.addEventListener('message', onMessage);
 
             worker.postMessage(<ICloneRequest> { id, method: 'clone', params: { arrayBufferId } });
+        });
+    };
+
+    const connect = (port: MessagePort): Promise<void> => {
+        return new Promise((resolve, reject) => {
+            const id = generateUniqueId(ongoingRequests);
+
+            ongoingRequests.add(id);
+
+            const onMessage = ({ data }: IWorkerEvent) => {
+                if (data.id === id) {
+                    ongoingRequests.delete(id);
+
+                    worker.removeEventListener('message', onMessage);
+
+                    if (data.error === null) {
+                        resolve();
+                    } else {
+                        reject(new Error(data.error.message));
+                    }
+                }
+            };
+
+            worker.addEventListener('message', onMessage);
+
+            worker.postMessage(<IConnectRequest> { id, method: 'connect', params: { port } }, [ port ]);
+        });
+    };
+
+    const disconnect = (port: MessagePort): Promise<void> => {
+        return new Promise((resolve, reject) => {
+            const id = generateUniqueId(ongoingRequests);
+
+            ongoingRequests.add(id);
+
+            const onMessage = ({ data }: IWorkerEvent) => {
+                if (data.id === id) {
+                    ongoingRequests.delete(id);
+
+                    worker.removeEventListener('message', onMessage);
+
+                    if (data.error === null) {
+                        resolve();
+                    } else {
+                        reject(new Error(data.error.message));
+                    }
+                }
+            };
+
+            worker.addEventListener('message', onMessage);
+
+            worker.postMessage(<IDisconnectRequest> { id, method: 'disconnect', params: { port } }, [ port ]);
         });
     };
 
@@ -139,8 +191,16 @@ export const load = (url: string) => {
 
     return {
         clone,
+        connect,
+        disconnect,
         purge,
         slice,
         store
     };
+};
+
+export const load = (url: string) => {
+    const worker = new Worker(url);
+
+    return wrap(worker);
 };

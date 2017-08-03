@@ -1,14 +1,16 @@
-import { load } from '../../src/module';
+import { load, wrap } from '../../src/module';
 
 describe('module', () => {
 
-    let arrayBufferCache;
+    let url;
 
-    afterEach((done) => {
-        Worker.reset();
-
+    after((done) => {
         // @todo This is a optimistic fix to prevent the famous 'Some of your tests did a full page reload!' error.
         setTimeout(done, 500);
+    });
+
+    afterEach(() => {
+        Worker.reset();
     });
 
     beforeEach(() => {
@@ -49,125 +51,210 @@ describe('module', () => {
 
         const blob = new Blob([
             `self.addEventListener('message', ({ data }) => {
-                self.postMessage(data);
+                // The port needs to be send as a Transferable because it can't be cloned.
+                if (data.params !== undefined && data.params.port !== undefined) {
+                    self.postMessage(data, [ data.params.port ]);
+                } else {
+                    self.postMessage(data);
+                }
             });`
         ], { type: 'application/javascript' });
 
-        arrayBufferCache = load(URL.createObjectURL(blob));
+        url = URL.createObjectURL(blob);
     });
 
-    describe('clone()', () => {
+    leche.withData([ 'loaded', 'wrapped' ], (method) => {
 
-        let arrayBufferId;
-
-        beforeEach(() => {
-            arrayBufferId = 132;
-        });
-
-        it('should send the correct message', (done) => {
-            Worker.addEventListener(0, 'message', ({ data }) => {
-                expect(data.id).to.be.a('number');
-
-                expect(data).to.deep.equal({
-                    id: data.id,
-                    method: 'clone',
-                    params: { arrayBufferId }
-                });
-
-                done();
-            });
-
-            arrayBufferCache.clone(arrayBufferId);
-        });
-
-    });
-
-    describe('purge()', () => {
-
-        let arrayBufferId;
+        let arrayBufferCache;
 
         beforeEach(() => {
-            arrayBufferId = 132;
+            if (method === 'loaded') {
+                arrayBufferCache = load(url);
+            } else {
+                const worker = new Worker(url);
+
+                arrayBufferCache = wrap(worker);
+            }
         });
 
-        it('should send the correct message', (done) => {
-            Worker.addEventListener(0, 'message', ({ data }) => {
-                expect(data.id).to.be.a('number');
+        describe('clone()', () => {
 
-                expect(data).to.deep.equal({
-                    id: data.id,
-                    method: 'purge',
-                    params: { arrayBufferId }
-                });
+            let arrayBufferId;
 
-                done();
+            beforeEach(() => {
+                arrayBufferId = 132;
             });
 
-            arrayBufferCache.purge(arrayBufferId);
-        });
+            it('should send the correct message', (done) => {
+                Worker.addEventListener(0, 'message', ({ data }) => {
+                    expect(data.id).to.be.a('number');
 
-    });
+                    expect(data).to.deep.equal({
+                        id: data.id,
+                        method: 'clone',
+                        params: { arrayBufferId }
+                    });
 
-    describe('slice()', () => {
-
-        let arrayBufferId;
-        let begin;
-        let end;
-
-        beforeEach(() => {
-            arrayBufferId = 132;
-            begin = 12;
-            end = 20;
-        });
-
-        it('should send the correct message', (done) => {
-            Worker.addEventListener(0, 'message', ({ data }) => {
-                expect(data.id).to.be.a('number');
-
-                expect(data).to.deep.equal({
-                    id: data.id,
-                    method: 'slice',
-                    params: { arrayBufferId, begin, end }
+                    done();
                 });
 
-                done();
+                arrayBufferCache.clone(arrayBufferId);
             });
 
-            arrayBufferCache.slice(arrayBufferId, begin, end);
         });
 
-    });
+        describe('connect()', () => {
 
-    describe('store()', () => {
+            let port;
 
-        let arrayBuffer;
+            beforeEach(() => {
+                const messageChannel = new MessageChannel();
 
-        beforeEach(() => {
-            arrayBuffer = new ArrayBuffer(256);
-        });
+                port = messageChannel.port1;
+            });
 
-        it('should send the correct message', (done) => {
-            Worker.addEventListener(0, 'message', ({ data }) => {
-                expect(data.id).to.be.a('number');
+            it('should send the correct message', (done) => {
+                Worker.addEventListener(0, 'message', ({ data }) => {
+                    expect(data.id).to.be.a('number');
 
-                expect(data.params.arrayBuffer).to.be.an.instanceOf(ArrayBuffer);
-                expect(data.params.arrayBuffer.byteLength).to.equal(256);
+                    expect(data.params.port).to.be.an.instanceOf(MessagePort);
 
-                expect(data.params.arrayBufferId).to.be.a('number');
+                    expect(data).to.deep.equal({
+                        id: data.id,
+                        method: 'connect',
+                        params: {
+                            port: data.params.port
+                        }
+                    });
 
-                expect(data).to.deep.equal({
-                    id: data.id,
-                    method: 'store',
-                    params: {
-                        arrayBuffer: data.params.arrayBuffer,
-                        arrayBufferId: data.params.arrayBufferId
-                    }
+                    done();
                 });
 
-                done();
+                arrayBufferCache.connect(port);
             });
 
-            arrayBufferCache.store(arrayBuffer);
+        });
+
+        describe('disconnect()', () => {
+
+            let port;
+
+            beforeEach(() => {
+                const messageChannel = new MessageChannel();
+
+                port = messageChannel.port1;
+            });
+
+            it('should send the correct message', (done) => {
+                Worker.addEventListener(0, 'message', ({ data }) => {
+                    expect(data.id).to.be.a('number');
+
+                    expect(data.params.port).to.be.an.instanceOf(MessagePort);
+
+                    expect(data).to.deep.equal({
+                        id: data.id,
+                        method: 'disconnect',
+                        params: {
+                            port: data.params.port
+                        }
+                    });
+
+                    done();
+                });
+
+                arrayBufferCache.disconnect(port);
+            });
+
+        });
+
+        describe('purge()', () => {
+
+            let arrayBufferId;
+
+            beforeEach(() => {
+                arrayBufferId = 132;
+            });
+
+            it('should send the correct message', (done) => {
+                Worker.addEventListener(0, 'message', ({ data }) => {
+                    expect(data.id).to.be.a('number');
+
+                    expect(data).to.deep.equal({
+                        id: data.id,
+                        method: 'purge',
+                        params: { arrayBufferId }
+                    });
+
+                    done();
+                });
+
+                arrayBufferCache.purge(arrayBufferId);
+            });
+
+        });
+
+        describe('slice()', () => {
+
+            let arrayBufferId;
+            let begin;
+            let end;
+
+            beforeEach(() => {
+                arrayBufferId = 132;
+                begin = 12;
+                end = 20;
+            });
+
+            it('should send the correct message', (done) => {
+                Worker.addEventListener(0, 'message', ({ data }) => {
+                    expect(data.id).to.be.a('number');
+
+                    expect(data).to.deep.equal({
+                        id: data.id,
+                        method: 'slice',
+                        params: { arrayBufferId, begin, end }
+                    });
+
+                    done();
+                });
+
+                arrayBufferCache.slice(arrayBufferId, begin, end);
+            });
+
+        });
+
+        describe('store()', () => {
+
+            let arrayBuffer;
+
+            beforeEach(() => {
+                arrayBuffer = new ArrayBuffer(256);
+            });
+
+            it('should send the correct message', (done) => {
+                Worker.addEventListener(0, 'message', ({ data }) => {
+                    expect(data.id).to.be.a('number');
+
+                    expect(data.params.arrayBuffer).to.be.an.instanceOf(ArrayBuffer);
+                    expect(data.params.arrayBuffer.byteLength).to.equal(256);
+
+                    expect(data.params.arrayBufferId).to.be.a('number');
+
+                    expect(data).to.deep.equal({
+                        id: data.id,
+                        method: 'store',
+                        params: {
+                            arrayBuffer: data.params.arrayBuffer,
+                            arrayBufferId: data.params.arrayBufferId
+                        }
+                    });
+
+                    done();
+                });
+
+                arrayBufferCache.store(arrayBuffer);
+            });
+
         });
 
     });
