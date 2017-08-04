@@ -117,7 +117,7 @@ export const wrap = (worker: MessagePort | Worker) => {
 
                     worker.removeEventListener('message', onMessage);
 
-                    ongoingRequests.delete(arrayBufferId);
+                    arrayBufferIds.delete(arrayBufferId);
 
                     if (data.error === null) {
                         resolve();
