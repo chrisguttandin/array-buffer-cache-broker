@@ -4,7 +4,7 @@
     "url": "https://github.com/chrisguttandin/array-buffer-cache-broker/issues"
   },
   "dependencies": {
-    "array-buffer-cache-worker": "^2.1.1"
+    "array-buffer-cache-worker": "^2.1.2"
   },
   "description": "The broker which is used by the array-buffer-cache package.",
   "devDependencies": {
