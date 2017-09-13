@@ -22,7 +22,7 @@ const generateUniqueId = (set: Set<number>) => {
     return id;
 };
 
-export const wrap = (worker: MessagePort | Worker) => {
+export const wrap = (worker: MessagePort | Worker) => {
     const arrayBufferIds: Set<number> = new Set();
 
     const ongoingRequests: Set<number> = new Set();
@@ -133,7 +133,7 @@ export const wrap = (worker: MessagePort | Worker) => {
         });
     };
 
-    const slice = (arrayBufferId: number, begin: number, end: null | number = null): Promise<ArrayBuffer> => {
+    const slice = (arrayBufferId: number, begin: number, end: null | number = null): Promise<ArrayBuffer> => {
         return new Promise((resolve, reject) => {
             const id = generateUniqueId(ongoingRequests);
 
