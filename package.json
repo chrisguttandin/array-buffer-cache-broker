@@ -6,7 +6,7 @@
   "dependencies": {
     "array-buffer-cache-worker": "^2.1.12",
     "babel-runtime": "^6.26.0",
-    "broker-factory": "^1.0.1",
+    "broker-factory": "^1.2.0",
     "fast-unique-numbers": "^1.1.2",
     "tslib": "^1.8.1"
   },
