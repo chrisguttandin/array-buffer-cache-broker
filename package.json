@@ -4,7 +4,7 @@
     "url": "https://github.com/chrisguttandin/array-buffer-cache-broker/issues"
   },
   "dependencies": {
-    "array-buffer-cache-worker": "^3.0.0",
+    "array-buffer-cache-worker": "^3.0.1",
     "babel-runtime": "^6.26.0",
     "broker-factory": "^1.2.0",
     "fast-unique-numbers": "^1.1.2",
