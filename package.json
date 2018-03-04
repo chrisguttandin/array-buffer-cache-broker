@@ -3,6 +3,11 @@
   "bugs": {
     "url": "https://github.com/chrisguttandin/array-buffer-cache-broker/issues"
   },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
   "dependencies": {
     "array-buffer-cache-worker": "^3.0.11",
     "babel-runtime": "^6.26.0",
@@ -54,8 +59,8 @@
     "webpack": "^4.1.0"
   },
   "files": [
-    "build/es5/",
     "build/es2015/",
+    "build/es5/",
     "build/esm/",
     "src/"
   ],
