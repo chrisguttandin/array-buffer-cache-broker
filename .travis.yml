@@ -1,9 +1,6 @@
 after_script: greenkeeper-lockfile-upload
 before_install: npm install npm@latest --global
 before_script: greenkeeper-lockfile-update
-cache:
-  directories:
-    - node_modules
 env:
   global:
     - secure: aLal0Me1n9RWIvgQkOMpdZoqI/9tQ+ADRmXPPqvNhDez47DFmArn/yEy53OdOnoXZN7VZs+KaS3uzwdKgB+TTD/ybc0a9NUJ+HvYuvPZognOYuf3B0gvxK7wveje+FvCGC7jBObnOMdM6ruLSrUAXCiK1efkkf+ul7y+LZBnlZ9s6pXCDg3BerffADeMl2v4Sf5avYV/s+l+DuPcl3T46AIc1kH1tHlV2uvd7wk2nCCd9mxztEB6VnY//ITJb3kW5qf/LBBtSzvDxIXWFEBHt2lWbzoHqQFk5VqcjDKqVIhdOXfWNHiOuWW+50QGBayT9BskTszZtRpK0BrYpFdJC/SgCGVq/HTh0IfbshA1YTt2wjbwizBvZpgO4jQihTDBS+gel7/n/pAcV9umzJT4olX0te+AWF779qAypBrBqeDYXvYDSwi91sU2/LCH95ecq0GkZkjxNEz7N8Ds7XmsJN6aayrm2EHcb/J/oT/+0WeQD1dQdHg87/tyrAppp/3PuEexT/fZxsmDTKBe8iO1zRI2JnvSjMJGWURefmhKDJgwvEJ0UiR4V7dvalwTJGZv69dA4pfgJCrbovU3AdF1D3IJP+Ds78Zh2PTxTrdqe4TMhRLefsMTtbf9PCg5vZpWH+oa8SJQRKq+xlDc16+9iiXUJYmPB8x6j95V7EHL88w=
