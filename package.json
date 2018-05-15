@@ -9,7 +9,7 @@
     }
   },
   "dependencies": {
-    "array-buffer-cache-worker": "^3.0.18",
+    "array-buffer-cache-worker": "^3.0.19",
     "babel-runtime": "^6.26.0",
     "broker-factory": "^1.2.20",
     "fast-unique-numbers": "^2.0.0",
