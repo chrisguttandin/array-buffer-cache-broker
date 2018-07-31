@@ -19,8 +19,8 @@ describe('module', () => {
 
             return class ExtendedWorker extends OriginalWorker {
 
-                constructor (url) {
-                    super(url);
+                constructor (rl) {
+                    super(rl);
 
                     const addEventListener = this.addEventListener;
 
