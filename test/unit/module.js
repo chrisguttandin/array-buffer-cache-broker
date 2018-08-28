@@ -75,6 +75,8 @@ describe('module', () => {
 
                 arrayBufferCache = wrap(worker);
             }
+
+            URL.revokeObjectURL(url);
         });
 
         describe('clone()', () => {
