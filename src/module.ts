@@ -10,31 +10,23 @@ export * from './types';
 const arrayBufferIds: Set<number> = new Set();
 
 export const wrap: TArrayBufferCacheBrokerWrapper = createBroker<IArrayBufferCacheBrokerDefinition, TArrayBufferCacheWorkerDefinition>({
-    clone: ({ call }) => {
-        return async (arrayBufferId: number): Promise<ArrayBuffer> => {
-            return call('clone', { arrayBufferId });
-        };
+    clone: ({ call }) => async (arrayBufferId) => {
+        return call('clone', { arrayBufferId });
     },
-    purge: ({ call }) => {
-        return async (arrayBufferId: number): Promise<void> => {
-            await call('purge', { arrayBufferId });
+    purge: ({ call }) => async (arrayBufferId) => {
+        await call('purge', { arrayBufferId });
 
-            arrayBufferIds.delete(arrayBufferId);
-        };
+        arrayBufferIds.delete(arrayBufferId);
     },
-    slice: ({ call }) => {
-        return (arrayBufferId: number, begin: number, end: null | number = null): Promise<ArrayBuffer> => {
-            return call('slice', { arrayBufferId, begin, end });
-        };
+    slice: ({ call }) => (arrayBufferId, begin, end = null) => {
+        return call('slice', { arrayBufferId, begin, end });
     },
-    store: ({ call }) => {
-        return async (arrayBuffer: ArrayBuffer): Promise<number> => {
-            const arrayBufferId = addUniqueNumber(arrayBufferIds);
+    store: ({ call }) => async (arrayBuffer) => {
+        const arrayBufferId = addUniqueNumber(arrayBufferIds);
 
-            await call('store', { arrayBuffer, arrayBufferId }, [ arrayBuffer ]);
+        await call('store', { arrayBuffer, arrayBufferId }, [ arrayBuffer ]);
 
-            return arrayBufferId;
-        };
+        return arrayBufferId;
     }
 });
 
