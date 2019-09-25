@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.6.2",
-    "array-buffer-cache-worker": "^5.0.29",
+    "array-buffer-cache-worker": "^5.0.30",
     "broker-factory": "^2.0.28",
     "fast-unique-numbers": "^4.0.8",
     "tslib": "^1.10.0"
