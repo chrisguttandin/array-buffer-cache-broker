@@ -10,23 +10,31 @@ export * from './types';
 const arrayBufferIds: Set<number> = new Set();
 
 export const wrap: TArrayBufferCacheBrokerWrapper = createBroker<IArrayBufferCacheBrokerDefinition, TArrayBufferCacheWorkerDefinition>({
-    clone: ({ call }) => async (arrayBufferId) => {
-        return call('clone', { arrayBufferId });
+    clone: ({ call }) => {
+        return (arrayBufferId) => {
+            return call('clone', { arrayBufferId });
+        };
     },
-    purge: ({ call }) => async (arrayBufferId) => {
-        await call('purge', { arrayBufferId });
+    purge: ({ call }) => {
+        return async (arrayBufferId) => {
+            await call('purge', { arrayBufferId });
 
-        arrayBufferIds.delete(arrayBufferId);
+            arrayBufferIds.delete(arrayBufferId);
+        };
     },
-    slice: ({ call }) => (arrayBufferId, begin, end = null) => {
-        return call('slice', { arrayBufferId, begin, end });
+    slice: ({ call }) => {
+        return (arrayBufferId, begin, end = null) => {
+            return call('slice', { arrayBufferId, begin, end });
+        };
     },
-    store: ({ call }) => async (arrayBuffer) => {
-        const arrayBufferId = addUniqueNumber(arrayBufferIds);
+    store: ({ call }) => {
+        return async (arrayBuffer) => {
+            const arrayBufferId = addUniqueNumber(arrayBufferIds);
 
-        await call('store', { arrayBuffer, arrayBufferId }, [ arrayBuffer ]);
+            await call('store', { arrayBuffer, arrayBufferId }, [ arrayBuffer ]);
 
-        return arrayBufferId;
+            return arrayBufferId;
+        };
     }
 });
 
