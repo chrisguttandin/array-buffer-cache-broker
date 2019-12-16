@@ -4,8 +4,12 @@ import { addUniqueNumber } from 'fast-unique-numbers';
 import { IArrayBufferCacheBrokerDefinition } from './interfaces';
 import { TArrayBufferCacheBrokerLoader, TArrayBufferCacheBrokerWrapper } from './types';
 
-export * from './interfaces';
-export * from './types';
+/*
+ * @todo Explicitly referencing the barrel file seems to be necessary when enabling the
+ * isolatedModules compiler option.
+ */
+export * from './interfaces/index';
+export * from './types/index';
 
 const arrayBufferIds: Set<number> = new Set();
 
