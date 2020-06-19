@@ -35,7 +35,7 @@ export const wrap: TArrayBufferCacheBrokerWrapper = createBroker<IArrayBufferCac
         return async (arrayBuffer) => {
             const arrayBufferId = addUniqueNumber(arrayBufferIds);
 
-            await call('store', { arrayBuffer, arrayBufferId }, [ arrayBuffer ]);
+            await call('store', { arrayBuffer, arrayBufferId }, [arrayBuffer]);
 
             return arrayBufferId;
         };
