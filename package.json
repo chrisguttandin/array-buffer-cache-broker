@@ -12,7 +12,7 @@
         "@babel/runtime": "^7.10.4",
         "array-buffer-cache-worker": "^6.0.16",
         "broker-factory": "^3.0.17",
-        "fast-unique-numbers": "^5.0.12",
+        "fast-unique-numbers": "^5.0.13",
         "tslib": "^2.0.0"
     },
     "description": "The broker which is used by the array-buffer-cache package.",
