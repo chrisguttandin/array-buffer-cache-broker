@@ -13,7 +13,7 @@
         "array-buffer-cache-worker": "^6.0.43",
         "broker-factory": "^3.0.48",
         "fast-unique-numbers": "^6.0.3",
-        "tslib": "^2.2.0"
+        "tslib": "^2.3.0"
     },
     "description": "The broker which is used by the array-buffer-cache package.",
     "devDependencies": {
