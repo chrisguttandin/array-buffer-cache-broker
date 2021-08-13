@@ -87,9 +87,7 @@ describe('module', () => {
                 arrayBufferId = 132;
             });
 
-            it('should send the correct message', function (done) {
-                this.timeout(4000);
-
+            it('should send the correct message', (done) => {
                 Worker.addEventListener(0, 'message', ({ data }) => {
                     expect(data.id).to.be.a('number');
 
@@ -113,9 +111,7 @@ describe('module', () => {
                 arrayBufferId = 132;
             });
 
-            it('should send the correct message', function (done) {
-                this.timeout(4000);
-
+            it('should send the correct message', (done) => {
                 Worker.addEventListener(0, 'message', ({ data }) => {
                     expect(data.id).to.be.a('number');
 
@@ -143,9 +139,7 @@ describe('module', () => {
                 end = 20;
             });
 
-            it('should send the correct message', function (done) {
-                this.timeout(4000);
-
+            it('should send the correct message', (done) => {
                 Worker.addEventListener(0, 'message', ({ data }) => {
                     expect(data.id).to.be.a('number');
 
@@ -169,9 +163,7 @@ describe('module', () => {
                 arrayBuffer = new ArrayBuffer(256);
             });
 
-            it('should send the correct message', function (done) {
-                this.timeout(4000);
-
+            it('should send the correct message', (done) => {
                 Worker.addEventListener(0, 'message', ({ data }) => {
                     expect(data.id).to.be.a('number');
 
