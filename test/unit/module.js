@@ -3,11 +3,6 @@ import { load, wrap } from '../../src/module';
 describe('module', () => {
     let url;
 
-    after((done) => {
-        // @todo This is an optimistic fix to prevent the famous 'Some of your tests did a full page reload!' error.
-        setTimeout(done, 500);
-    });
-
     afterEach(() => {
         Worker.reset();
     });
