@@ -11,7 +11,7 @@
     "dependencies": {
         "@babel/runtime": "^7.24.1",
         "array-buffer-cache-worker": "^6.0.84",
-        "broker-factory": "^3.0.95",
+        "broker-factory": "^3.0.96",
         "fast-unique-numbers": "^9.0.2",
         "tslib": "^2.6.2"
     },
