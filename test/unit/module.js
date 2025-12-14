@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { load, wrap } from '../../src/module';
 
 describe('module', () => {
@@ -83,7 +84,9 @@ describe('module', () => {
                     arrayBufferId = 132;
                 });
 
-                it('should send the correct message', (done) => {
+                it('should send the correct message', () => {
+                    const { promise, resolve } = Promise.withResolvers();
+
                     Worker.addEventListener(0, 'message', ({ data }) => {
                         expect(data.id).to.be.a('number');
 
@@ -93,10 +96,12 @@ describe('module', () => {
                             params: { arrayBufferId }
                         });
 
-                        done();
+                        resolve();
                     });
 
                     arrayBufferCache.clone(arrayBufferId);
+
+                    return promise;
                 });
             });
 
@@ -107,7 +112,9 @@ describe('module', () => {
                     arrayBufferId = 132;
                 });
 
-                it('should send the correct message', (done) => {
+                it('should send the correct message', () => {
+                    const { promise, resolve } = Promise.withResolvers();
+
                     Worker.addEventListener(0, 'message', ({ data }) => {
                         expect(data.id).to.be.a('number');
 
@@ -117,10 +124,12 @@ describe('module', () => {
                             params: { arrayBufferId }
                         });
 
-                        done();
+                        resolve();
                     });
 
                     arrayBufferCache.purge(arrayBufferId);
+
+                    return promise;
                 });
             });
 
@@ -135,7 +144,9 @@ describe('module', () => {
                     end = 20;
                 });
 
-                it('should send the correct message', (done) => {
+                it('should send the correct message', () => {
+                    const { promise, resolve } = Promise.withResolvers();
+
                     Worker.addEventListener(0, 'message', ({ data }) => {
                         expect(data.id).to.be.a('number');
 
@@ -145,10 +156,12 @@ describe('module', () => {
                             params: { arrayBufferId, begin, end }
                         });
 
-                        done();
+                        resolve();
                     });
 
                     arrayBufferCache.slice(arrayBufferId, begin, end);
+
+                    return promise;
                 });
             });
 
@@ -159,7 +172,9 @@ describe('module', () => {
                     arrayBuffer = new ArrayBuffer(256);
                 });
 
-                it('should send the correct message', (done) => {
+                it('should send the correct message', () => {
+                    const { promise, resolve } = Promise.withResolvers();
+
                     Worker.addEventListener(0, 'message', ({ data }) => {
                         expect(data.id).to.be.a('number');
 
@@ -177,10 +192,12 @@ describe('module', () => {
                             }
                         });
 
-                        done();
+                        resolve();
                     });
 
                     arrayBufferCache.store(arrayBuffer);
+
+                    return promise;
                 });
             });
         });
